@@ -10,7 +10,9 @@ from keras.layers import Conv2D, MaxPooling2D, Conv1D, MaxPooling1D
 """
 This script trains a basic CNN and then plots the accuracy and validaiton accuracy on one plot and the loss and validation loss on one plot
 
-The parameters to set are the path to input data, the noise and signal files, and the output name for the model that will be trained
+The parameters to set are the path to input data, the noise and signal files, and the output name for the model that will be trained.
+
+Here a model is trained on two dimensional data, and refer to train_cnn_one_dim_data.py for training on data that is channels*samples=1 dimension
 """
 ###########################################
 path = "/arianna_data"
