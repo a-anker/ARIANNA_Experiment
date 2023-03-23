@@ -12,13 +12,14 @@ This script trains a basic CNN and then plots the accuracy and validaiton accura
 
 The parameters to set are the path to input data, the noise and signal files, and the output name for the model that will be trained.
 
-Here a model is trained on two dimensional data, and refer to train_cnn_one_dim_data.py for training on data that is channels*samples=1 dimension
+Here a model is trained on two dimensional data, and refer to nn_train_test_efficiency.py for training on data that is channels*samples=1 dimension
 """
 ###########################################
 path = "/arianna_data"
 noise = np.load(os.path.join(path, "noise.npy")) #input a subset of the data here so that you can validate on the other set
 signal = np.load(os.path.join(path, "signal.npy")) #make sure the signal and noise subset of data are the same size
-model_name = 'trained_CNN_1l-10-8-10_do0.5_mp10_fltn_sigm' #name without .h5 at the end. Make sure to include relevant training info
+model_name = "trained_CNN_1l-10-8-10_do0.5_mp10_fltn_sigm" #name without .h5 at the end. Make sure to include relevant training info
+model_path = "/h5_model_path"
 
 # for the deep learning filter simulated data, this is how it is read in:
 # signal = np.load(os.path.join(path, f"data_signal_{ch}ch_0000.npy"))
@@ -59,7 +60,7 @@ BATCH_SIZE = 32
 EPOCHS = 100
 
 callbacks_list = [
-keras.callbacks.EarlyStopping(monitor='val_loss', patience=2)]
+keras.callbacks.EarlyStopping(monitor='val_loss', patience=4)] #this stops the training whent he val loss doesn't decrease for 4 epochs
 
 model = Sequential()
 model.add(Conv2D(10, (8, 10), activation='relu', input_shape=(n_channels, n_samples, 1)))
@@ -93,4 +94,4 @@ plt.legend(['train', 'val'], loc='upper left')
 plt.show()
 
 #input the path and file you'd like to save the model as (in h5 format)
-model.save(f'{model_name}.h5')
+model.save(f'{model_path}/{model_name}.h5')
