@@ -15,8 +15,8 @@ The parameters to set are the path to input data, the noise and signal files, an
 path = "/arianna_data"
 noise = np.load(os.path.join(path, "noise.npy")) #input a subset of the data here so that you can validate on the other set
 signal = np.load(os.path.join(path, "signal.npy")) #make sure the signal and noise subset of data are the same size
-model_name = 'trained_CNN_1l-10-8-10_do0.5_mp10_fltn_sigm'
-
+model_name = "trained_CNN_1l-10-8-10_do0.5_mp10_fltn_sigm"
+model_path = "/h5_model_path"
 
 if signal.ndim==2:
     signal = np.reshape(signal, (signal.shape[0], 1, signal.shape[1]))
@@ -24,13 +24,6 @@ if signal.ndim==2:
 
 
 def train_cnn():
-  #make signal the same shape as the noise data, if needed
-  # signal = np.vstack((signal,signal,signal,signal))
-  # signal = signal[0:noise.shape[0]]
-
-  print(signal.shape)
-  print(noise.shape)
-
   x = np.vstack((noise, signal)) 
 
   n_samples = x.shape[2]
@@ -62,7 +55,7 @@ def train_cnn():
   model.summary()
 
   #input the path and file you'd like to save the model as (in h5 format)
-  model.save(f'{model_name}.h5')
+  model.save(f'{model_path}/{model_name}.h5')
 
 
 
@@ -79,7 +72,7 @@ def efficiency_curve(h5_name, n_dpt, colors):
     y[:n_signal, 1] = 1
     y[n_signal:, 0] = 1
 
-    model = keras.models.load_model(f'{path}/{h5_name}.h5')
+    model = keras.models.load_model(f'{model_path}/{h5_name}.h5')
     y_pred = model.predict(x)
     print(y_pred)
 
