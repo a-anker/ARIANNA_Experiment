@@ -1,4 +1,4 @@
-When running the python script that is using Sherpa, one of the printouts will look something like this:
+When running the python script that is using Sherpa, one of the terminal printouts will look something like this:
 
 INFO:sherpa.core:
 -------------------------------------------------------
