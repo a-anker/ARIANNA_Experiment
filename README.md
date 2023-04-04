@@ -32,11 +32,15 @@ Trying importing some of these packages to determine if the packages were downlo
       >>> import tensorflow
       
 
-## Plots and their corresponding scripts
+# Plots and their corresponding scripts
+
+
+**Refer to template_study/:**
 
 <img src="https://user-images.githubusercontent.com/38436394/226751873-e69ddeda-e275-4d9c-9a43-69f3ae935690.png" width=50% height=50%>
 
 
+**Refer to interpretability/:**
 
 <p float="left">
   <img src="https://user-images.githubusercontent.com/38436394/226752913-3067bfc4-40c7-4ae7-8930-43de1f14130b.png" width="250" />
