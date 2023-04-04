@@ -1,6 +1,5 @@
 When running the python script that is using Sherpa, one of the terminal printouts will look something like this:
 
-INFO:sherpa.core:
 -------------------------------------------------------
 SHERPA Dashboard running. Access via
 http://169.234.34.214:8880 or 
