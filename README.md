@@ -71,7 +71,7 @@ Trying importing some of these packages to determine if the packages were downlo
 
 <img src="https://user-images.githubusercontent.com/38436394/226755679-fb3a3ead-604f-4a25-9a92-7bf390f2768c.png" width=50% height=50%>
 
-**Refer to FFTs/:**
+**Refer to fft.py:**
 
 <img src="https://user-images.githubusercontent.com/38436394/226755781-0a914f17-d640-4411-9599-edb7f0713f0a.png" width=50% height=50%>
 
