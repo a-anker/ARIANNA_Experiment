@@ -53,6 +53,7 @@ Trying importing some of these packages to determine if the packages were downlo
 <img src="https://user-images.githubusercontent.com/38436394/226755074-339cc62d-49bd-40db-9c1f-1ee4fe212466.png" width=50% height=50%>
 
 **Refer to cnn_train_test_efficiency.py:**
+
 <img src="https://user-images.githubusercontent.com/38436394/226754574-fc267146-9a36-40de-ade5-fd144383f845.png" width=50% height=50%>
 
 
