@@ -56,6 +56,7 @@ Trying importing some of these packages to determine if the packages were downlo
 
 <img src="https://user-images.githubusercontent.com/38436394/226754574-fc267146-9a36-40de-ade5-fd144383f845.png" width=50% height=50%>
 
+**Refer to train_cnn_with_acc_loss_plot.py:**
 
 <p float="left">
   <img src="https://user-images.githubusercontent.com/38436394/226755185-840b8a01-078c-42bf-9cbb-dfe009572a72.png" width="400" />
