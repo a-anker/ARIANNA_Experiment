@@ -4,7 +4,7 @@
 The steps listed below are how to get a similar environment to mine when conducting this research. There are however many ways to set up similar environments so use this as only one reference.
 
 - Download and install [Anaconda](https://www.anaconda.com/products/distribution)
-- Create conda environment and then list all environments
+- Create conda environment with a user "chosen_name" and then list all environments
             
       $ conda create --name chosen_name
       $ conda env list
