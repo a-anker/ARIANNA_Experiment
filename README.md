@@ -47,7 +47,7 @@ This will ensure that the script in this repository will be found by your local 
       
       
       
- For more tips on installing other analysis tools used within ARIANNA, refer to the README in Geoffrey Gaswint's [ARIANNA](https://github.com/ggaswint/ARIANNAanalysis) repository.
+For more tips on installing other analysis tools used within ARIANNA such as ROOT, snowShovel, and additional requirements, refer to the README in Geoffrey Gaswint's [ARIANNA](https://github.com/ggaswint/ARIANNAanalysis) repository.
       
       
 
