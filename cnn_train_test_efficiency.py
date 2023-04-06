@@ -6,6 +6,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Reshape, GlobalAveragePooling1D, Activation, GlobalAveragePooling2D
 from keras.layers import Conv2D, MaxPooling2D, Conv1D, MaxPooling1D
 
+PathToARIANNA = os.environ['ARIANNA_analysis']
+
 """
 This script trains a basic CNN with function train_cnn and then plots the efficiency curve with the function efficiency_curve
 
