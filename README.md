@@ -22,7 +22,7 @@ When the conda environment is activated, packages will be installed only in this
       $ conda install pip
       $ pip install matplotlib numpy scipy tensorflow keras 
             
-Trying importing some of these packages to determine if the packages were downloaded sucessfully. If there are any dependencies missing from this list, just pip install them the same way as above.
+Try importing some of these packages to determine if the packages were downloaded sucessfully. If there are any dependencies missing from this list, just pip install them the same way as above.
 
       $ python
       >>> from matplotlib import pyplot as plt
@@ -30,6 +30,17 @@ Trying importing some of these packages to determine if the packages were downlo
       >>> import scipy 
       >>> import keras
       >>> import tensorflow
+      
+Next to download this responsitory to a local computer by using cd to go into your chosen directory for this analysis then
+      $ git clone https://github.com/a-anker/ARIANNA_Experiment.git
+      
+      
+      
+      
+      
+      
+ For more tips on installing other analysis tools used within ARIANNA, refer to the README in Geoffrey Gaswint's ARIANNA [repository](https://github.com/ggaswint/ARIANNAanalysis).
+      
       
 
 # Plots and their corresponding scripts
