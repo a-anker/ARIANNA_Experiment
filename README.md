@@ -31,15 +31,21 @@ Try importing some of these packages to determine if the packages were downloade
       >>> import keras
       >>> import tensorflow
       
-Next to download this responsitory to a local computer by using cd to go into your chosen directory for this analysis then
+Next to download this repository to a local computer, use cd to go into your chosen directory for this analysis then
       $ git clone https://github.com/a-anker/ARIANNA_Experiment.git
       
       
+All of these scripts use the os.environ['ARIANNA_Experiment'] variable to locate this github repository and its scripts, so add your specified local path as an environment variable. To do this, locate and open your .bashrc or .bash_profile, which is usually in your home directory (nano ~/.bash_profile). Next input your github repository location as an environment variable. For example, if this downloaded github repository is located in /home/aanker, you will need to add the text below to the .bash_profile file:
+      $export ARIANNA_Experiment="/home/aanker/ARIANNA_Experiment"
+    
+This will ensure that the script in this repository will be found by your local computer.
       
       
       
       
- For more tips on installing other analysis tools used within ARIANNA, refer to the README in Geoffrey Gaswint's ARIANNA [repository](https://github.com/ggaswint/ARIANNAanalysis).
+      
+      
+ For more tips on installing other analysis tools used within ARIANNA, refer to the README in Geoffrey Gaswint's [ARIANNA](https://github.com/ggaswint/ARIANNAanalysis) repository.
       
       
 
