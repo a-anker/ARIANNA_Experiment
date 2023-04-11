@@ -6,15 +6,15 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Reshape, GlobalAveragePooling1D, Activation, GlobalAveragePooling2D
 from keras.layers import Conv2D, MaxPooling2D, Conv1D, MaxPooling1D
 
-###########################################
+######################################################################################################################
 """
 This script trains a basic CNN and then plots the accuracy and validaiton accuracy on one plot and the loss and validation loss on one plot
 
-The parameters to set are the path to input data, the noise and signal files, and the output name for the model that will be trained.
+The parameters to set are the path to input data, the noise and signal files, and the output name and path for the model that will be trained.
 
 Here a model is trained on two dimensional data, and refer to nn_train_test_efficiency.py for training on data that is channels*samples=1 dimension
 """
-###########################################
+######################################################################################################################
 path = "/arianna_data"
 noise = np.load(os.path.join(path, "noise.npy")) #input a subset of the data here so that you can validate on the other set
 signal = np.load(os.path.join(path, "signal.npy")) #make sure the signal and noise subset of data are the same size
