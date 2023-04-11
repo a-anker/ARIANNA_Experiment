@@ -20,7 +20,7 @@ The steps listed below are how to get a similar environment to mine when conduct
 When the conda environment is activated, packages will be installed only in this environment. Activate the environment once again then install the pip package manager and other relevant python packages. I use tensorflow 2 and python 3.8.5.
       
       $ conda install pip
-      $ pip install matplotlib numpy scipy tensorflow keras 
+      $ pip install matplotlib numpy scipy tensorflow keras, parameter-sherpa 
             
 Try importing some of these packages to determine if the packages were downloaded sucessfully. If there are any dependencies missing from this list, just pip install them the same way as above.
 
