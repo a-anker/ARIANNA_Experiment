@@ -5,28 +5,28 @@ from keras.models import Sequential, load_model
 from keras.layers import Dense, Activation
 from matplotlib import pyplot as plt
 
-
+######################################################################################################################
 """
-This script trains a basic FCNN with function train_nn and then plots the efficiency curve with the function efficiency_curve
+This script trains a basic FCNN with function train_nn() and then plots the efficiency curve of the same model with the function efficiency_curve()
 
-The parameters to set are the path to input data, the noise and signal files, and the output name for the model that will be trained and tested.
+The parameters to set are the file names in noise and signal variables (and paths if different from ARIANNA_Experiment/data/), 
+and the model_name and model_path variables, which specifies what the trained model is called and where it will be saved
 
 The model parameters in the function train_nn can also be changed to create a different model
 """
-
-path = "/arianna_data"
-noise = np.load(os.path.join(path, "noise.npy")) #input a subset of the data here so that you can validate on the other set
-signal = np.load(os.path.join(path, "signal.npy")) #make sure the signal and noise subset of data are the same size
-model_name = 'trained_NN_1ch_1l_128n_10e_bs32_lr0.0008'
-model_path = "/h5_model_path"
-
+######################################################################################################################
+PathToARIANNA = os.environ['ARIANNA_Experiment']
+noise = np.load(PathToARIANNAData + '/data/noise.npy') #input a subset of the data here so that you can validate on the other set
+signal = np.load(PathToARIANNAData + '/data/signal.npy') #make sure the signal and noise subset of data are the same size
+model_name = 'trained_NN_1l-n128_sigmoid_EP10.h5' #example name with .h5 at the end. Make sure to include relevant training info in model name
+model_path = PathToARIANNAData + '/models_h5_files'
 
 if signal.ndim==2:
     signal = np.reshape(signal, (signal.shape[0], 1, signal.shape[1]))
     noise = np.reshape(noise, (noise.shape[0], 1, noise.shape[1]))
 
-signal = np.reshape(signal, (signal.shape[0], signal.shape[1]*signal.shape[1])) #creates one dimentional array (flattening it) to use for training
-noise = np.reshape(noise, (noise.shape[0], noise.shape[1]*noise.shape[1]))
+signal = np.reshape(signal, (signal.shape[0], signal.shape[1]*signal.shape[2])) #creates one dimentional array (flattening it) to use for training
+noise = np.reshape(noise, (noise.shape[0], noise.shape[1]*noise.shape[2]))
 
 
 def train_nn():
@@ -57,7 +57,7 @@ def train_nn():
     model.fit(x, y, validation_split=.1, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1)  # training on the data
     model.summary()
 
-    model.save(f'{model_path}/{model_name}.h5')
+    model.save(os.path.join(model_path, model_name))
  
 
 
@@ -70,7 +70,7 @@ def efficiency_curve_nn(h5_name, n_dpt, colors):
     in_dim = x.shape[1]
     y = np.vstack((np.zeros((noise.shape[0], 1)), np.ones((signal.shape[0], 1))))
 
-    model = keras.models.load_model(f'{model_path}/{h5_name}.h5')
+    model = keras.models.load_model(os.path.join(model_path, h5_name))
     y_pred = model.predict(x)
 
     ary = np.zeros((2, n_dpt * 2))
