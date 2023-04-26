@@ -28,6 +28,11 @@ s = np.load(PathToARIANNAData + '/data/signal.npy') #make sure the signal and no
 model_path = PathToARIANNAData + '/models_h5_files/'
 CV_num = 5 #this value can be changed to have the data split into more or less cross validiation groups
 CV_size = 24000 #this gives the amount of data in each fold of the CV
+ 
+if s.ndim==2: # for data of shape (event_num, samples), this reformats it into 3 dimensions
+    s = np.reshape(s, (s.shape[0], 1, s.shape[1]))
+    n = np.reshape(n, (n.shape[0], 1, n.shape[1]))
+        
         
 def data(s, n, k, d_size):
         s_tot = np.zeros((k,d_size,100))
