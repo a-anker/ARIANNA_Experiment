@@ -25,7 +25,7 @@ PathToARIANNA = os.environ['ARIANNA_Experiment']
 n = np.load(PathToARIANNAData + '/data/noise.npy') #input a subset of the data here so that you can validate on the other set
 s = np.load(PathToARIANNAData + '/data/signal.npy') #make sure the signal and noise subset of data are the same size
 #actual model name is specified below when loading the model
-model_path = PathToARIANNAData + '/models_h5_files'
+model_path = PathToARIANNAData + '/models_h5_files/'
 CV_num = 5 #this value can be changed to have the data split into more or less cross validiation groups
 CV_size = 24000 #this gives the amount of data in each fold of the CV
         
