@@ -14,6 +14,7 @@ extracts the traces/waveforms for all channels and event within the run number, 
 ######################################################################################################################
 PathToARIANNA = os.environ['ARIANNA_Experiment']
 chan_num = 4 #the number of channels in the input data used
+station_number = 18 #the station number or station id of the data
 
 def convert_to_numpy(data_file, run_num):
     print(f'running file {run_num}')
@@ -27,7 +28,7 @@ def convert_to_numpy(data_file, run_num):
     for i, event in enumerate(reader.run()):
         for station_object in event.get_stations():
             if station_object.has_triggered() is True:
-                station = event.get_station(18)
+                station = event.get_station(station_number)
                 seq = station.get_ARIANNA_parameter(ARIpar.seq_num)
                 if seq is None:
                     print('none')
