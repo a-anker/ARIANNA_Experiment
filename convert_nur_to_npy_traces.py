@@ -6,14 +6,22 @@ import numpy as np
 from numpy import save, load
 import matplotlib.pyplot as plt
 
+######################################################################################################################
+"""
+This script takes in a range of .nur files with different run number labels (00000,00001,....00009),
+extracts the traces/waveforms for all channels and event within the run number, and save them to a numpy array.
+"""
+######################################################################################################################
+PathToARIANNA = os.environ['ARIANNA_Experiment']
+chan_num = 4 #the number of channels in the input data used
 
-def main(noise_files, run_num):
+def convert_to_numpy(data_file, run_num):
     print(f'running file {run_num}')
 
     reader = eventReader.eventReader()
-    reader.begin(noise_files)
-    all_evts = np.zeros((150000, 4, 256))
-    rate_ind_vals = np.zeros((150000, 4))
+    reader.begin(data_file)
+    all_evts = np.zeros((150000, chan_num, 256))
+    rate_ind_vals = np.zeros((1000000, chan_num))
     count = 0
     
     for i, event in enumerate(reader.run()):
@@ -30,15 +38,17 @@ def main(noise_files, run_num):
                     count += 1
 
     all_evts_final = all_evts[0:count]
-    save(f'/Volumes/External/wind_events/arianna_data_st18-19/st18/all_st18_data/all_traces/traces_station_18_run_00{run_num}.npy', all_evts_final)
+    save(PathToARIANNA + f'/traces_station_18_run_00{run_num}.npy', all_evts_final)
+    
+def main():
+    for i in range(10):
+        run_num = f"{i:03d}"
+        fname = PathToARIANNA + f'/station_18_run_00{run_num}.root.nur'
+        if os.path.isfile(fname):
+            noise_files = glob.glob(fname)
+            convert_to_numpy(noise_files, run_num)
+        else:
+            continue
 
-for i in range(14, 272):
-    run_num = f"{i:03d}"
-    fname = f'/Volumes/External/wind_events/arianna_data_st18-19/st18/all_st18_data/station_18_run_00{run_num}.root.nur'
-    npy_name = f'/Volumes/External/wind_events/arianna_data_st18-19/st18/all_st18_data/no_thresh/rates_info_avg2seq_station_18_run_00{run_num}_4vals.npy'
-    if os.path.isfile(fname) and os.path.isfile(npy_name):
-        noise_files = glob.glob(fname)
-        main(noise_files, run_num)
-    else:
-        continue
-
+if __name__== "__main__":
+    main()
