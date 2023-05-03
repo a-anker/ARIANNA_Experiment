@@ -5,22 +5,23 @@ import numpy as np
 import os
 import time
 
-templ = np.load('/Volumes/External/ML_paper/cross_correlation_study/trimmed100_data_signal_LPDA_ch0_0.036sa_10.0vrms_no_noise.npy')[0, :]
+######################################################################################################################
+"""
+This script calculates the correlation of input signal and noise files with an input template to get prediction values between 0 and 1. 
+Then the same data is run through a previously trained model to obtain the network output values between 0 and 1. 
+Each set of signal and noise pairs are then scanned through to calculate the signal efficiency vs noise rejection and make the plot.
+"""
+######################################################################################################################
+PathToARIANNA = os.environ['ARIANNA_Experiment']
+noise = np.load(PathToARIANNAData + '/data/measured_noise.npy') 
+signal = np.load(PathToARIANNAData + '/data/measured_signal.npy') 
+templ = np.load(PathToARIANNAData + '/template_study/trimmed100_data_signal_LPDA_ch0_0.036sa_10.0vrms_no_noise.npy')[0, :]
+h5_model = "/trained_for_extract_weights_100samp_cnn_1layer5-10_mp10_s1_1output.h5"
 
-path = "/Volumes/External/arianna_data"
-signal = np.load(os.path.join(path, "trimmed100_data_signal_3.6SNR_1ch_0001.npy"))
-noise = np.zeros((500000, 100), dtype=np.float32)
-for i in range(6, 11):
-    noise[(i - 6) * 100000:(i - 6 + 1) * 100000] = np.load(os.path.join(path, f"trimmed100_data_noise_3.6SNR_1ch_{i:04d}.npy")).astype(np.float32)
-
-print(signal.shape)
-print(noise.shape)
-
-
-def correl_calc(data, save_path):
+def correl_calc(data):
     xcorr_array = np.zeros((data.shape[0]))
     for i in range(len(data)):
-        # print(i)
+      
         # first value is stationary and then second input is convolved over the first. First value is first val in template and last value in 2nd input
         xcorr = correlate(templ, data[i], mode='full', method='auto')  # / (np.sum(templ ** 2) * np.sum(data[i] ** 2)) ** 0.5
         print((xcorr[1], templ, data[i]))
@@ -28,62 +29,23 @@ def correl_calc(data, save_path):
         print(xcorrpos)
         xcorr = xcorr[xcorrpos]
         xcorr_array[i] = xcorr
-        time.sleep(5)
-    # np.save(save_path, xcorr_array)
+    return xcorr_array
+ 
 
+def cnn_efficiency():
+    n_signal = signal.shape[0]
+    n_noise = noise.shape[0]
+    s = np.expand_dims(signal, axis=-1)
+    n = np.expand_dims(noise, axis=-1)
 
-# correl_calc(signal, '/Users/astrid/Desktop/ML_paper/cross_correlation_study/signal_correlation')
-# correl_calc(noise, '/Users/astrid/Desktop/ML_paper/cross_correlation_study/noise_correlation')
-
-
-def plot_correl(sig_corr, noise_corr):
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    plt.xlabel('correlation', fontsize=17)
-    plt.ylabel('events', fontsize=17)
-    plt.xticks(size=15)
-    plt.yticks(size=15)
-
-    # plt.yscale('log')
-
-    weights = 1 * np.ones_like(sig_corr) / len(sig_corr)
-    ax.hist(np.abs(sig_corr), bins=40, range=(0, 1), histtype='step', color='blue', linestyle='solid',
-            label=f'signal', linewidth=1.5, weights=weights)
-
-    weights = 1 * np.ones_like(noise_corr) / len(noise_corr)
-    ax.hist(np.abs(noise_corr), bins=40, range=(0, 1), histtype='step', color='red', linestyle='solid',
-            label=f'noise', linewidth=1.5, weights=weights)
-    plt.legend()
-    plt.show()
-
-
-sig_corr = np.load('/Volumes/External/ML_paper/cross_correlation_study/signal_correlation.npy')
-noise_corr = np.load('/Volumes/External/ML_paper/cross_correlation_study/noise_correlation.npy')
-
-# calc efficiency for 1 cut value
-# count = 0
-# for val in np.abs(sig_corr):
-#     if val >= 0.5:
-#         count += 1
-# print(f'signal efficiency: {count / len(sig_corr)}')
-# count = 0
-# for val in np.abs(noise_corr):
-#     if val < 0.5:
-#         count += 1
-# print(f'noise efficiency: {count / len(noise_corr)}')
-
-# plot_correl(sig_corr, noise_corr)
-
-# plot all efficiency values
-
-
-def cnn():
+    model = keras.models.load_model(PathToARIANNA + h5_model)
+    sig_corr = model.predict(s)
+    noise_corr = model.predict(n)
+    
     n_dpt = 800
     ary = np.zeros((2, n_dpt))
     vals = np.zeros((n_dpt))  # array of threshold cuts
     vals[:n_dpt] = np.linspace(0, 1, n_dpt)
-    # vals[n_dpt:] = np.linspace(0.9, 1, n_dpt)
     for i, threshold in enumerate(vals):
         eff_signal = np.sum((np.abs(sig_corr) > threshold) == True) / len(sig_corr)
         eff_noise = np.sum((np.abs(noise_corr) > threshold) == False) / len(noise_corr)
@@ -95,23 +57,27 @@ def cnn():
             reduction_factor = (len(noise_corr))
             ary[0][i] = reduction_factor
         ary[1][i] = eff_signal
-
-    # plt.plot(ary[1][1:], ary[0][1:], c=colors, label=label)
     return ary[1][1:], ary[0][1:]
 
 
-x, y = cnn()
-ary = np.array((x, y))
-print(ary.shape)
-np.save('/Volumes/External/ML_paper/cross_correlation_study/signal_vs_noise_eff_values2', ary)
-plt.plot(x, y, label='', linewidth=3)
+def main():
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    
+    templ_sig_corr = correl_calc(signal)
+    templ_noise_corr = correl_calc(noise)
+    x, y = cnn_efficiency()
+
+    plt.plot(x[0::10], y[0::10], label='CNN: 100 samples', linewidth=3) #syntax [0::10] plots every 10 events to give a smoother curve
+    plt.plot(templ_signal_corr[0::10], templ_noise_corr[0::10], label='template: 100 samples', linewidth=3) #syntax [0::10] plots every 10 events to give a smoother curve
+    
+    plt.legend(loc='lower left')
+    plt.yscale('log')
+    plt.grid(True, 'major', 'both', linewidth=0.5)
+    plt.xlabel('signal efficiency', fontsize=15)
+    plt.ylabel('noise reduction factor', fontsize=15)
+    plt.show()
 
 
-plt.legend(loc='lower left')
-plt.yscale('log')
-# plt.xlim(0.91, 1)
-# plt.ylim(1, 10**6)
-plt.grid(True, 'major', 'both', linewidth=0.5)
-plt.xlabel('signal efficiency', fontsize=15)
-plt.ylabel('noise reduction factor', fontsize=15)
-plt.show()
+if __name__== "__main__":
+    main()
