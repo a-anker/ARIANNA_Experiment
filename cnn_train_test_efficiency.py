@@ -7,13 +7,13 @@ from keras.layers import Dense, Dropout, Flatten, Reshape, GlobalAveragePooling1
 from keras.layers import Conv2D, MaxPooling2D, Conv1D, MaxPooling1D
 
 PathToARIANNA = os.environ['ARIANNA_analysis']
-
+######################################################################################################################
 """
 This script trains a basic CNN with function train_cnn and then plots the efficiency curve with the function efficiency_curve
 
 The parameters to set are the path to input data, the noise and signal files, and the output name for the model that will be trained and tested
 """
-
+######################################################################################################################
 path = "/arianna_data"
 noise = np.load(os.path.join(path, "noise.npy")) #input a subset of the data here so that you can validate on the other set
 signal = np.load(os.path.join(path, "signal.npy")) #make sure the signal and noise subset of data are the same size
