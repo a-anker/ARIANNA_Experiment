@@ -1,5 +1,4 @@
 import os
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 import glob
 from matplotlib import pyplot as plt
 import numpy as np
@@ -11,42 +10,29 @@ from keras.layers import Conv2D, MaxPooling2D, Conv1D, MaxPooling1D
 from keras.utils import np_utils
 import time
 
+PathToARIANNA = os.environ['ARIANNA_analysis']
+######################################################################################################################
+"""
 
+"""
+######################################################################################################################
+PathToARIANNA = os.environ['ARIANNA_Experiment']
+n = np.load(PathToARIANNAData + '/data/noise.npy') #input a subset of the data here so that you can validate on the other set
+s = np.load(PathToARIANNAData + '/data/signal.npy') #make sure the signal and noise subset of data are the same size
+model_path = PathToARIANNAData + '/models_h5_files/'
+model = keras.models.load_model(model_path + 'trained_for_extract_weights_100samp_cnn_1layer5-10_mp10_s1_1output.h5')
+iterations = 100 #how many events are looped over and plotted
+chs = 4 #number of channels in the data
 
-path = "/Volumes/External/arianna_data/"
-ch = 1
+if s.ndim==2: # for data of shape (event_num, samples), this reformats it into 3 dimensions
+    s = np.reshape(s, (s.shape[0], 1, s.shape[1]))
+    n = np.reshape(n, (n.shape[0], 1, n.shape[1]))
+        
+noise = np.reshape(n, (n.shape[0], n.shape[1] * n.shape[2],1,1))
+signal = np.reshape(s, (s.shape[0], s.shape[1] *  n.shape[2],1,1))
 
-
-s = np.load(os.path.join(path, "trimmed100_data_signal_3.6SNR_1ch_0000.npy"))
-
-n = np.zeros((600000, 100), dtype=np.float32)
-for i in range(6):
-  n[(i) * 100000:(i + 1) * 100000] = np.load(os.path.join(path, f"trimmed100_data_noise_3.6SNR_1ch_{i:04d}.npy")).astype(np.float32)
-
-
-# #______________
-# # artifact data
-# model = keras.models.load_model(os.path.join("/Volumes/External/ML_paper/a_efficiency/trained_CNN_100samp_1L5-10_0-n600k_s100k_addartifact-noise-50mV-to-1st-10samps.h5"))
-# n[:,0:10] = 0.05*np.ones(10) ###############################################################add a pulse artifact for 1st 10 samples at 50mV
-# #_______________
-
-ch=1
-noise = np.reshape(n, (n.shape[0], n.shape[1] * ch,1,1))
-signal = np.reshape(s, (s.shape[0], s.shape[1] * ch,1,1))
-# print(signal.shape, noise.shape)
-
-
-
-def main(evt_num,chs,label):
-
-	data = signal ######change this one and the one on line 55
+def dl_stepbystep(data, evt_num, label):
 	manual_data = data[evt_num] # (2048,1,1)
-	
-	pred_data = data
-	model = keras.models.load_model(os.path.join("/Volumes/External/ML_paper/a_efficiency",'trained_for_extract_weights_100samp_cnn_1layer5-10_mp10_s1_1output.h5'))
-	model.summary()
-	# print(model.predict(signal))
-
 	#______________________________________
 	#plot input waveform
 	x = np.linspace(1, 100, 100)
@@ -190,9 +176,11 @@ def main(evt_num,chs,label):
 	# sigmoid activation
 	smoid = 1 / (1 + np.exp(-s4))
 	print('sigmoid',smoid)
-# for i in range(37265):
-# 	main(i)
 
-# main(11)
-for i in range(50):
-	main(i,chs=1,label='neutrino signal')
+
+for i in range(iterations):
+	dl_stepbystep(data=signal,i,label='neutrino signal') #change signal value to noise to plot noise data
+	
+	
+if __name__== "__main__":
+    main()
