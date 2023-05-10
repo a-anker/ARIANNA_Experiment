@@ -13,7 +13,7 @@ import time
 PathToARIANNA = os.environ['ARIANNA_analysis']
 ######################################################################################################################
 """
-
+This script plots the intermediate stages of a 1 layer CNN with x amount of kernels with y size. The comments on shape are for an eight channel 1D convolution with 10 10x1 kernels.
 """
 ######################################################################################################################
 PathToARIANNA = os.environ['ARIANNA_Experiment']
@@ -22,34 +22,35 @@ s = np.load(PathToARIANNAData + '/data/signal.npy') #make sure the signal and no
 model_path = PathToARIANNAData + '/models_h5_files/'
 model = keras.models.load_model(model_path + 'trained_for_extract_weights_100samp_cnn_1layer5-10_mp10_s1_1output.h5')
 iterations = 100 #how many events are looped over and plotted
-chs = 4 #number of channels in the data
+chs = 1 #number of channels in the data
 
 if s.ndim==2: # for data of shape (event_num, samples), this reformats it into 3 dimensions
     s = np.reshape(s, (s.shape[0], 1, s.shape[1]))
     n = np.reshape(n, (n.shape[0], 1, n.shape[1]))
-        
-noise = np.reshape(n, (n.shape[0], n.shape[1] * n.shape[2],1,1))
-signal = np.reshape(s, (s.shape[0], s.shape[1] *  n.shape[2],1,1))
+d=s       
+signal = np.reshape(s, (s.shape[0], s.shape[1], s.shape[2],1))
+noise = np.reshape(n, (n.shape[0], n.shape[1], n.shape[2],1))
 
-def dl_stepbystep(data, evt_num, label):
-	manual_data = data[evt_num] # (2048,1,1)
-	#______________________________________
+
+def plot_input_wf():
 	#plot input waveform
-	x = np.linspace(1, 100, 100)
+	x = np.linspace(1, d.shape[2], d.shape[2])
 	fig, axs = plt.subplots(2, sharex=True)
 	
 	axs[0].plot(x, s[evt_num], color='black') #######
-	# plt.xticks(size=16)
-	# plt.yticks(size=16)
 	axs[0].set_ylabel('Voltage [V]',fontsize=19)
 	axs[0].tick_params(axis='both', which='major', labelsize=16)
 	axs[1].set_xlabel('sample',fontsize=19)
-	# axs[1].yticks(size=16)
 	axs[0].set_title(f'{label}: classif={float(model.predict(np.expand_dims(manual_data,0))[0]):.2f}',fontsize=15) #e for scifi notation, f for float
 
 	# plt.show()
-	#______________________________________
 
+
+def dl_stepbystep(data, evt_num, label):
+	manual_data = data[evt_num] # (2048,1,1)
+	
+	
+	
 	weights = model.get_weights()[0]  # (10, 1, 10)
 	weights = weights[:,:,0,:]  # shape is (fil size1,fil size2, n_filters)
 	filter_size1,filter_size2, n_filters = weights.shape
