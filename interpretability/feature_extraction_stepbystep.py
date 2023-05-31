@@ -135,5 +135,3 @@ def dl_stepbystep(data, evt_num, label):
 for i in range(iterations):
 	dl_stepbystep(data=signal,i,label='neutrino signal') #change signal value to noise to plot noise data
 	
-if __name__== "__main__":
-    main()
